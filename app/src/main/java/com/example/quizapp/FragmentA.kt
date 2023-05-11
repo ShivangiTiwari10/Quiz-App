@@ -16,6 +16,7 @@ import com.example.quizapp.models.Questions
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.util.*
 
 
 class FragmentA : Fragment() {
@@ -25,12 +26,13 @@ class FragmentA : Fragment() {
     lateinit var dataBase: QuestionDataBase
     private var currentQuestionIndex = 0
 
+    private val totalQuestions = 6 // Total number of questions in the database
+    private var answeredQuestions = 0 // Number of questions answered by the user
     private var score = 0
 
     private lateinit var dialog: Dialog
     private lateinit var dialogWrong: Dialog
 
-    @OptIn(DelicateCoroutinesApi::class)
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -48,6 +50,86 @@ class FragmentA : Fragment() {
             Room.databaseBuilder(requireContext(), QuestionDataBase::class.java, "questionDatabase")
                 .fallbackToDestructiveMigration().build()
 
+
+        getData(binding.root)
+        insertQuestion()
+
+        return binding.root
+    }
+
+    @SuppressLint("SetTextI18n")
+    fun getData(view: View) {
+
+        dataBase.questionDao().getAllQuestions().observe(viewLifecycleOwner, Observer { questions ->
+
+            if (currentQuestionIndex < totalQuestions)
+           {
+                val currentQuestion = questions[currentQuestionIndex]
+
+                binding.tvQuestion.text = currentQuestion.questionText
+                binding.radioButton1.text = currentQuestion.option1
+                binding.radioButton2.text = currentQuestion.option2
+                binding.radioButton3.text = currentQuestion.option3
+                binding.radioButton4.text = currentQuestion.option4
+
+
+                val correctAnswer = currentQuestion.correctAnswer
+                binding.nextQuestionBtn.setOnClickListener {
+                    val selectedAns = when (binding.radiogrp.checkedRadioButtonId) {
+                        R.id.radioButton1 -> currentQuestion.option1
+                        R.id.radioButton2 -> currentQuestion.option2
+                        R.id.radioButton3 -> currentQuestion.option3
+                        R.id.radioButton4 -> currentQuestion.option4
+                        else -> ""
+                    }
+
+                    val isCorrect = selectedAns == correctAnswer
+
+                    if (isCorrect) {
+                        dialog.show()
+
+                        score++
+
+                    } else {
+                        dialogWrong.show()
+
+                    }
+                    answeredQuestions++
+                    currentQuestionIndex++
+
+                    binding.txtPlayScore.text = "Your score is:$score"
+
+                    getData(it)
+                }
+            }
+
+
+            if (currentQuestionIndex < totalQuestions) {
+                // Continue showing the next question
+                val nextQuestion = questions[currentQuestionIndex]
+                binding.tvQuestion.text = nextQuestion.questionText
+                binding.radioButton1.text = nextQuestion.option1
+                binding.radioButton2.text = nextQuestion.option2
+                binding.radioButton3.text = nextQuestion.option3
+                binding.radioButton4.text = nextQuestion.option4
+            } else {
+                // Show the total number of questions and score
+                binding.tvNoOfQues.text = "$totalQuestions\n $score"
+                binding.radioButton1.visibility = View.GONE
+                binding.radioButton2.visibility = View.GONE
+                binding.radioButton3.visibility = View.GONE
+                binding.radioButton4.visibility = View.GONE
+                binding.nextQuestionBtn.visibility = View.GONE
+            }
+
+            binding.txtPlayScore.text = "Your score is: $score"
+
+
+        })
+    }
+
+    @OptIn(DelicateCoroutinesApi::class)
+    private fun insertQuestion() {
         GlobalScope.launch {
             dataBase.questionDao().addQuestion(
                 Questions(
@@ -116,61 +198,6 @@ class FragmentA : Fragment() {
                 )
             )
         }
-
-
-        getData(binding.root)
-        return binding.root
-
-
-    }
-
-    @SuppressLint("SetTextI18n")
-    fun getData(view: View) {
-
-        dataBase.questionDao().getAllQuestions().observe(viewLifecycleOwner, Observer { questions ->
-            if (questions.isNotEmpty()) {
-                val currentQuestion = questions[currentQuestionIndex]
-
-                binding.tvQuestion.text = currentQuestion.questionText
-                binding.radioButton1.text = currentQuestion.option1
-                binding.radioButton2.text = currentQuestion.option2
-                binding.radioButton3.text = currentQuestion.option3
-                binding.radioButton4.text = currentQuestion.option4
-
-
-                val correctAnswer = currentQuestion.correctAnswer
-                binding.nextQuestionBtn.setOnClickListener {
-                    val selectedAns = when (binding.radiogrp.checkedRadioButtonId) {
-                        R.id.radioButton1 -> currentQuestion.option1
-                        R.id.radioButton2 -> currentQuestion.option2
-                        R.id.radioButton3 -> currentQuestion.option3
-                        R.id.radioButton4 -> currentQuestion.option4
-                        else -> ""
-                    }
-
-                    val isCorrect = selectedAns == correctAnswer
-
-
-
-                    if (isCorrect) {
-                        dialog.show()
-                        score++
-                        currentQuestionIndex++
-                    } else {
-                        dialogWrong.show()
-                        currentQuestionIndex++
-
-                    }
-                    binding.txtPlayScore.text = "Your score is:$score"
-
-                    getData(it)
-                }
-            }
-
-
-        })
-
-
     }
 
 }

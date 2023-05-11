@@ -9,4 +9,6 @@
     <string name="play">Play</string>
     <string name="quiz_app">Quiz App</string>
     <string name="fragment_b">Fragment B</string>
+    <string name="correct">Correct</string>
+    <string name="wrong">Wrong</string>
 </resources>
