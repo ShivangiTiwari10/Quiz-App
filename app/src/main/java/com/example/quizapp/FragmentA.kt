@@ -1,6 +1,7 @@
 package com.example.quizapp
 
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -19,11 +20,12 @@ import kotlinx.coroutines.launch
 
 class FragmentA : Fragment() {
 
-
     private lateinit var binding: FragmentABinding
 
     lateinit var dataBase: QuestionDataBase
     private var currentQuestionIndex = 0
+
+    private var score = 0
 
     private lateinit var dialog: Dialog
     private lateinit var dialogWrong: Dialog
@@ -122,6 +124,7 @@ class FragmentA : Fragment() {
 
     }
 
+    @SuppressLint("SetTextI18n")
     fun getData(view: View) {
 
         dataBase.questionDao().getAllQuestions().observe(viewLifecycleOwner, Observer { questions ->
@@ -147,12 +150,19 @@ class FragmentA : Fragment() {
 
                     val isCorrect = selectedAns == correctAnswer
 
+
+
                     if (isCorrect) {
                         dialog.show()
+                        score++
                         currentQuestionIndex++
                     } else {
                         dialogWrong.show()
+                        currentQuestionIndex++
+
                     }
+                    binding.txtPlayScore.text = "Your score is:$score"
+
                     getData(it)
                 }
             }
