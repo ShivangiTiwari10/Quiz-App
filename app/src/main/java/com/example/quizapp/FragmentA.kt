@@ -1,12 +1,12 @@
 package com.example.quizapp
 
 
+import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.room.Room
 import com.example.quizapp.database.QuestionDataBase
@@ -22,9 +22,11 @@ class FragmentA : Fragment() {
 
     private lateinit var binding: FragmentABinding
 
-
     lateinit var dataBase: QuestionDataBase
     private var currentQuestionIndex = 0
+
+    private lateinit var dialog: Dialog
+    private lateinit var dialogWrong: Dialog
 
     @OptIn(DelicateCoroutinesApi::class)
     override fun onCreateView(
@@ -32,6 +34,13 @@ class FragmentA : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentABinding.inflate(inflater, container, false)
+
+        dialog = Dialog(requireContext())
+        dialog.setContentView(R.layout.custom_dialog)
+
+        dialogWrong = Dialog(requireContext())
+        dialogWrong.setContentView(R.layout.custom_dialog_wrong)
+
 
         dataBase =
             Room.databaseBuilder(requireContext(), QuestionDataBase::class.java, "questionDatabase")
@@ -139,10 +148,10 @@ class FragmentA : Fragment() {
                     val isCorrect = selectedAns == correctAnswer
 
                     if (isCorrect) {
+                        dialog.show()
                         currentQuestionIndex++
                     } else {
-
-                        Toast.makeText(requireContext(), "Wrong Answer", Toast.LENGTH_SHORT).show()
+                        dialogWrong.show()
                     }
                     getData(it)
                 }
