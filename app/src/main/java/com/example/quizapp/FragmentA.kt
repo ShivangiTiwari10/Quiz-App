@@ -62,8 +62,7 @@ class FragmentA : Fragment() {
 
         dataBase.questionDao().getAllQuestions().observe(viewLifecycleOwner, Observer { questions ->
 
-            if (currentQuestionIndex < totalQuestions)
-           {
+            if (currentQuestionIndex < totalQuestions) {
                 val currentQuestion = questions[currentQuestionIndex]
 
                 binding.tvQuestion.text = currentQuestion.questionText
@@ -115,6 +114,8 @@ class FragmentA : Fragment() {
             } else {
                 // Show the total number of questions and score
                 binding.tvNoOfQues.text = "$totalQuestions\n $score"
+                fragmentB()
+
                 binding.radioButton1.visibility = View.GONE
                 binding.radioButton2.visibility = View.GONE
                 binding.radioButton3.visibility = View.GONE
@@ -198,6 +199,26 @@ class FragmentA : Fragment() {
                 )
             )
         }
+    }
+
+//    To start fragment b
+
+    private fun fragmentB() {
+
+        val fragmentB = FragmentB()
+
+        val args = Bundle()
+        args.putInt("totalQuestions", totalQuestions)
+        args.putInt("Score", score)
+        fragmentB.arguments = args
+
+        val fragmentManager = requireActivity().supportFragmentManager
+        val transaction = fragmentManager.beginTransaction()
+
+        transaction.replace(R.id.container, fragmentB)
+        transaction.commit()
+
+
     }
 
 }

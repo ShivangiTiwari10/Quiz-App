@@ -5,8 +5,8 @@
     android:layout_height="match_parent"
     tools:context=".FragmentB">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:id="@+id/get_Score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
