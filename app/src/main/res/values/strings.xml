@@ -22,4 +22,6 @@
     <string name="_1_6">1/10</string>
     <string name="basic_quiz_app">Basic Quiz App</string>
     <string name="quiz_over">Quiz Over</string>
+    <string name="_6">1/6</string>
+    <string name="play_again">Play Again</string>
 </resources>

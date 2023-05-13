@@ -42,7 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
-        android:text="@string/_1_10"
+        android:text="@string/_6"
         android:textColor="@color/black"
         android:textSize="16sp"
         android:textStyle="bold"
