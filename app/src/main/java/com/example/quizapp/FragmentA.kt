@@ -39,6 +39,7 @@ class FragmentA : Fragment() {
     ): View {
         binding = FragmentABinding.inflate(inflater, container, false)
 
+
         dialog = Dialog(requireContext())
         dialog.setContentView(R.layout.custom_dialog)
 
@@ -50,9 +51,9 @@ class FragmentA : Fragment() {
             Room.databaseBuilder(requireContext(), QuestionDataBase::class.java, "questionDatabase")
                 .fallbackToDestructiveMigration().build()
 
+        insertQuestion()
 
         getData(binding.root)
-        insertQuestion()
 
         return binding.root
     }
@@ -73,6 +74,7 @@ class FragmentA : Fragment() {
 
 
                 val correctAnswer = currentQuestion.correctAnswer
+
                 binding.nextQuestionBtn.setOnClickListener {
                     val selectedAns = when (binding.radiogrp.checkedRadioButtonId) {
                         R.id.radioButton1 -> currentQuestion.option1
@@ -85,16 +87,18 @@ class FragmentA : Fragment() {
                     val isCorrect = selectedAns == correctAnswer
 
                     if (isCorrect) {
-                        dialog.show()
+//                          ? Set Dialog Box
 
+                        dialog.show()
                         score++
+                        currentQuestionIndex++
 
                     } else {
                         dialogWrong.show()
+                        currentQuestionIndex++
 
                     }
                     answeredQuestions++
-                    currentQuestionIndex++
 
                     binding.txtPlayScore.text = "Your score is:$score"
 
@@ -112,22 +116,13 @@ class FragmentA : Fragment() {
                 binding.radioButton3.text = nextQuestion.option3
                 binding.radioButton4.text = nextQuestion.option4
             } else {
-                // Show the total number of questions and score
-                binding.tvNoOfQues.text = "$totalQuestions\n $score"
+
                 fragmentB()
 
-                binding.radioButton1.visibility = View.GONE
-                binding.radioButton2.visibility = View.GONE
-                binding.radioButton3.visibility = View.GONE
-                binding.radioButton4.visibility = View.GONE
-                binding.nextQuestionBtn.visibility = View.GONE
             }
-
-            binding.txtPlayScore.text = "Your score is: $score"
-
-
         })
     }
+
 
     @OptIn(DelicateCoroutinesApi::class)
     private fun insertQuestion() {
@@ -201,8 +196,7 @@ class FragmentA : Fragment() {
         }
     }
 
-//    To start fragment b
-
+    //    Start FragmentB
     private fun fragmentB() {
 
         val fragmentB = FragmentB()
@@ -217,7 +211,6 @@ class FragmentA : Fragment() {
 
         transaction.replace(R.id.container, fragmentB)
         transaction.commit()
-
 
     }
 
