@@ -81,17 +81,16 @@ class FragmentA : Fragment() {
                         R.id.radioButton2 -> currentQuestion.option2
                         R.id.radioButton3 -> currentQuestion.option3
                         R.id.radioButton4 -> currentQuestion.option4
-                        else -> ""
+                        else -> "Not correct"
                     }
 
                     val isCorrect = selectedAns == correctAnswer
 
                     if (isCorrect) {
-//                          ? Set Dialog Box
-
                         dialog.show()
                         score++
                         currentQuestionIndex++
+
 
                     } else {
                         dialogWrong.show()
@@ -99,27 +98,28 @@ class FragmentA : Fragment() {
 
                     }
                     answeredQuestions++
-
                     binding.txtPlayScore.text = "Your score is:$score"
 
-                    getData(it)
                 }
-            }
-
-
-            if (currentQuestionIndex < totalQuestions) {
-                // Continue showing the next question
-                val nextQuestion = questions[currentQuestionIndex]
-                binding.tvQuestion.text = nextQuestion.questionText
-                binding.radioButton1.text = nextQuestion.option1
-                binding.radioButton2.text = nextQuestion.option2
-                binding.radioButton3.text = nextQuestion.option3
-                binding.radioButton4.text = nextQuestion.option4
-            } else {
-
-                fragmentB()
+                getData(view)
 
             }
+
+                    if (currentQuestionIndex < totalQuestions) {
+                        // Continue showing the next question
+                        val nextQuestion = questions[currentQuestionIndex]
+                        binding.tvQuestion.text = nextQuestion.questionText
+                        binding.radioButton1.text = nextQuestion.option1
+                        binding.radioButton2.text = nextQuestion.option2
+                        binding.radioButton3.text = nextQuestion.option3
+                        binding.radioButton4.text = nextQuestion.option4
+                    } else {
+
+                        fragmentB()
+                    }
+
+
+//            binding.txtPlayScore.text = "Your score is: $score"
         })
     }
 
@@ -193,6 +193,52 @@ class FragmentA : Fragment() {
                     "A single screen in an application with supporting java code"
                 )
             )
+            dataBase.questionDao().addQuestion(
+                Questions(
+                    0,
+                    "Which of the following is a dialog class in android?",
+                    "AlertDialog",
+                    "DatePicker Dialog",
+                    "ProgressDialog",
+                    "None of the above",
+                    "None of the above"
+                )
+
+            )
+            dataBase.questionDao().addQuestion(
+                Questions(
+                    0,
+                    "Which of the following is the built-in database of Android?",
+                    "SQLite",
+                    "MySQL",
+                    "Oracle",
+                    "None of the above",
+                    "SQLite"
+                )
+            )
+            dataBase.questionDao().addQuestion(
+                Questions(
+                    0,
+                    "Which of the following android library provides access to the database?",
+                    "android.content",
+                    "android.database",
+                    "android.api",
+                    "None of the above",
+                    "android.database"
+                )
+            )
+             dataBase.questionDao().addQuestion(
+                Questions(
+                    0,
+                    "GCM in android stands for -",
+                    "Google Cloud Messaging",
+                    "Google Count Messaging",
+                    "Google Center Messaging",
+                    "None of the above",
+                    "Google Cloud Messaging"
+                )
+            )
+
         }
     }
 
