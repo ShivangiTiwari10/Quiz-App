@@ -36,18 +36,6 @@
         app:layout_constraintTop_toBottomOf="@+id/title" />
 
 
-    <TextView
-        android:id="@+id/tv_noOfQues"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="16dp"
-        android:text="@string/_6"
-        android:textColor="@color/black"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title" />
 
     <RadioGroup
         android:id="@+id/radiogrp"
